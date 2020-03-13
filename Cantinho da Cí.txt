@@ -1,0 +1,136 @@
+#Importar as bibliotecas
+from tkinter import *
+from tkinter import messagebox
+from tkinter import ttk
+import DataBaser
+
+#Criar Janela Principal do Sistema
+jan = Tk()
+jan.title("Cantinho da Cí")
+jan.geometry("900x600")
+jan.configure(background="#ffe4e1")
+jan.resizable(width=True, height=True)
+jan.iconbitmap(default="icons/icon1.ico")
+
+
+#======== Carregando Imagens
+logo = PhotoImage(file = "icons/icon2.png")
+ImagemFundo = PhotoImage(file = "Icons/ImagemFundo.png")
+
+#======== Widgets =========
+LeftFrame = Frame (jan, width=300, height=600, bg="yellow", relief="raise")
+LeftFrame.pack(side=LEFT)
+
+LeftFrame2 = Frame (jan, width=500, height=200, bg="#ffe4e1", relief="raise")
+LeftFrame2.pack(side=BOTTOM)
+
+RightFrame = Frame (jan, width=900, height=800, bg="#ffe4e1", relief="raise")
+RightFrame.pack(side=RIGHT)
+
+FuncLabel = Label(LeftFrame2, text="Funcionalidades:", font=("Century Gothic", 20), bg="yellow", fg="black")
+FuncLabel.place(x=133, y=5)
+
+LogoLabel = Label(LeftFrame, image=logo, bg="yellow")
+LogoLabel.place(x=26, y=90)
+
+ImagemFundoLabel = Label(RightFrame, image=ImagemFundo, bg="#ffe4e1")
+ImagemFundoLabel.place(x=90, y=-30)
+
+
+#Botoes
+RegisterButton2 = ttk.Button(LeftFrame2, text="Cadastrar Peças", width=40)
+RegisterButton2.place(x=122, y=100)
+
+RegisterButton3 = ttk.Button(LeftFrame2, text="Cadastrar Vendas", width=40)
+RegisterButton3.place(x=122, y=137)
+
+def Register():
+    jan2 = Tk()
+    jan2.title("Cadastrar Cliente")
+    jan2.geometry("400x600")
+    jan2.configure(background="#ffe4e1")
+    jan2.resizable(width=True, height=True)
+    jan2.iconbitmap(default="icons/icon1.ico")
+
+    #Widgets
+    RightFrameRegister = Frame (jan2, width=900, height=600, bg="#ffe4e1", relief="raise")
+    RightFrameRegister.pack(side=RIGHT)
+    
+    #Inserindo Widgets de Cadastro
+    NomeLabel = Label(RightFrameRegister, text="Nome:", font=("Century Gothic", 12), bg="#ffe4e1", fg="black")
+    NomeLabel.place(x=5, y=5)
+
+    NomeEntry = ttk.Entry(RightFrameRegister, width=63)
+    NomeEntry.place(x=5, y=30)
+
+    EmailLabel = Label(RightFrameRegister, text="Email:", font=("Century Gothic", 12), bg="#ffe4e1", fg="black")
+    EmailLabel.place(x=5, y=55)
+
+    EmailEntry = ttk.Entry(RightFrameRegister, width=63)
+    EmailEntry.place(x=5, y=80)
+
+    NumeroLabel = Label(RightFrameRegister, text="Número:", font=("Century Gothic", 12), bg="#ffe4e1", fg="black")
+    NumeroLabel.place(x=5, y=105)
+
+    NumeroEntry = ttk.Entry(RightFrameRegister, width=17)
+    NumeroEntry.place(x=5, y=130)
+    
+    EnderecoLabel = Label(RightFrameRegister, text="Endereço:", font=("Century Gothic", 12), bg="#ffe4e1", fg="black")
+    EnderecoLabel.place(x=5, y=155)
+
+    EnderecoEntry = ttk.Entry(RightFrameRegister, width=63)
+    EnderecoEntry.place(x=5, y=180)
+    
+    TamanhoLabel = Label(RightFrameRegister, text="Tamanho:", font=("Century Gothic", 12), bg="#ffe4e1", fg="black")
+    TamanhoLabel.place(x=5, y=205)
+
+    TamanhoEntry = ttk.Entry(RightFrameRegister, width=17)
+    TamanhoEntry.place(x=5, y=230)
+
+    PecasLabel = Label(RightFrameRegister, text="Peças Preferidas:", font=("Century Gothic", 12), bg="#ffe4e1", fg="black")
+    PecasLabel.place(x=5, y=255)
+
+    PecasEntry = ttk.Entry(RightFrameRegister, width=63)
+    PecasEntry.place(x=5, y=280)
+
+    CoresLabel = Label(RightFrameRegister, text="Preferência de Cores:", font=("Century Gothic", 12), bg="#ffe4e1", fg="black")
+    CoresLabel.place(x=5, y=305)
+
+    CoresEntry = ttk.Entry(RightFrameRegister, width=63)
+    CoresEntry.place(x=5, y=330)
+
+    #Inputando Dados no Banco
+    def RegisterToDataBase():
+        Nome = NomeEntry.get()
+        Email = EmailEntry.get()
+        Numero = NumeroEntry.get()
+        Endereco = EnderecoEntry.get()
+        Tamanho = TamanhoEntry.get()
+        Pecas = PecasEntry.get()
+        Cores = CoresEntry.get()
+
+        DataBaser.cursor.execute("""
+        INSERT INTO Clientes(Nome, Email, Numero, Endereco, Tamanho, Pecas, Cores) VALUES(?, ?, ?, ?, ?, ?, ?)
+        """, (Nome, Email, Numero, Endereco, Tamanho, Pecas, Cores))
+        DataBaser.conn.commit()
+        messagebox.showinfo(title="Informação de Cadastro", message= "Conta cadastrada com sucesso")
+        jan2.destroy()
+
+    Register = ttk.Button(RightFrameRegister, text="Cadastrar Cliente", width=30, command=RegisterToDataBase)
+    Register.place(x=100, y=525)
+
+    def BackToLogin():
+        #Voltando a Janela Principal
+        jan2.destroy()
+
+    Back = ttk.Button(RightFrameRegister, text="Voltar", width=20, command=BackToLogin)
+    Back.place(x=125, y=555)
+
+#Abre tela para cadastrar clientes 
+RegisterButton = ttk.Button(LeftFrame2, text="Cadastrar Cliente", width=40, command=Register)
+RegisterButton.place(x=122, y=60)
+
+
+
+
+jan.mainloop()
